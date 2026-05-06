@@ -13,13 +13,18 @@ jobs:
       image: kivy/buildozer:latest
 
     env:
-      CI: "true"
-      BUILD_ZIP: "0"
+      DEBIAN_FRONTEND: noninteractive
+      CI: "1"
       BUILDOZER_WARN_ON_ROOT: "0"
+      PIP_NO_INPUT: "1"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Force clean build folder
+        run: |
+          rm -rf .buildozer
 
       - name: Build APK
         run: |
