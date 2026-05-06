@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # ⚠️ tärkeä muutos!
 
     steps:
       - uses: actions/checkout@v4
@@ -16,20 +16,27 @@ jobs:
         with:
           python-version: "3.10"
 
-      - run: |
+      - name: Install dependencies
+        run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk \
-          build-essential python3-pip autoconf libtool pkg-config
+          build-essential python3-pip autoconf libtool pkg-config \
+          libncurses5
+
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Accept Android licenses
+      - name: Initialize buildozer
+        run: |
+          buildozer init || true
+
+      - name: Accept licenses
         run: yes | sdkmanager --licenses || true
 
       - name: Build APK
         run: |
           buildozer android clean
-          buildozer android debug
+          buildozer -v android debug
 
       - uses: actions/upload-artifact@v4
         with:
