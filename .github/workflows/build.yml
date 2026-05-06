@@ -12,13 +12,17 @@ jobs:
     container:
       image: kivy/buildozer:latest
 
+    env:
+      CI: true
+      BUILD_ZIP: 0
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer --allow-root android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
